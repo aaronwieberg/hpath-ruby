@@ -26,7 +26,7 @@ module Hpath
       _dfs(object.values, filter)
     end
   end
-  
+
   def self._get(object, paths, parent = object)
     _object = object
 
@@ -111,7 +111,9 @@ module Hpath
       else
         mapped_object = object.map do |element|
           if element.is_a?(Hash)
-            element[identifier.to_s] || element[identifier.to_sym] 
+            if element.key?(identifier.to_s) then element[identifier.to_s]
+            else element[identifier.to_sym]
+            end
           elsif element.respond_to?(identifier)
             element.send(identifier)
           else

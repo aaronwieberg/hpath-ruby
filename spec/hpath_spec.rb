@@ -32,7 +32,7 @@ describe Hpath do
         hpath_result = Hpath.get({a: "b", c: "d"}, "/*")
         expect(hpath_result).to eq([{:a=>"b"}, {:c=>"d"}])
       end
-      
+
       it "processes \"/[key1, key2]\" for a hash" do
         hpath_result = Hpath.get({a: 1, b: 2, "c" => 3}, "/[a,c]")
         expect(hpath_result).to eq({a: 1, "c" => 3})
@@ -52,7 +52,7 @@ describe Hpath do
         hpath_result = Hpath.get([{a:"1", b:"2", c:"3"}, {a:"1", b:"5", c:"6"}, {a:"2", b:"1", c:"3"}], "/[a=1,(b=5|c=3)]")
         expect(hpath_result).to eq([{:a=>"1", :b=>"2", :c=>"3"}, {:a=>"1", :b=>"5", :c=>"6"}])
       end
-      
+
       it "processes \"/array/key\" for an array of hashes" do
         hpath_result = Hpath.get([{a:"1", b:"2", c:"3"}, {a:"1", b:"5", c:"6"}, {a:"2", b:"1", c:"3"}], "/a")
         expect(hpath_result).to eq(["1", "1", "2"])
@@ -104,6 +104,14 @@ describe Hpath do
            {:query_string=>{:query=>"kofler", :fields=>["creator"]}},
            {:query_string=>{:query=>"linux", :fields=>["subject"]}}]
         )
+      end
+
+      it "processes /hash/array/hash_key when the hash has String keys" do
+        hpath_result = Hpath.get(
+          { nested: [{ 'name' => 'Linux', 'valid' => true },
+                     { 'name' => 'Windows', 'valid' => false }] },
+          "/nested/valid")
+        expect(hpath_result).to eq [true, false]
       end
     end
 
