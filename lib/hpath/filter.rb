@@ -28,19 +28,21 @@ class Hpath::Filter
       @operands.any? { |filter| filter.applies?(object) }
     elsif @type == :existence
       key = operands.first
-      
+
       if object.is_a?(Hash)
         object.keys.include?(key.to_s) || object.keys.include?(key.to_sym)
       end
     elsif @type == :equality
       key, value = @operands
-      
+
       if object.is_a?(Hash)
-        object[key.to_s] == value.to_s || object[key.to_sym] == value.to_s ||
-        object[key.to_s] == value.to_sym || object[key.to_sym] == value.to_sym
+        return true if object[key.to_s] == value.to_s || object[key.to_sym] == value.to_s ||
+                       object[key.to_s] == value.to_sym || object[key.to_sym] == value.to_sym
+        return object[key.to_s] == (value == "true") || object[key.to_sym] == (value == "true") if value == "true" || value == "false"
       elsif object.respond_to(key)
-        object.send(key) == value
+        return object.send(key) == value
       end
+      false
     end
   end
 end

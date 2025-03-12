@@ -58,6 +58,12 @@ describe Hpath do
         expect(hpath_result).to eq(["1", "1", "2"])
       end
 
+      it "processes /*[key=value] for boolean values" do
+        value = [{a: "foo", good: true}, {a: "bar", good: false}, {a: "baz", good: true}]
+        expect(Hpath.get(value, "/*[good=true]")).to eq([{a: "foo", good: true}, {a: "baz", good: true}])
+        expect(Hpath.get(value, "/*[good=false]")).to eq([{a: "bar", good: false}])
+      end
+
 =begin
       it "processes \"/key1/::parent\" for a hash" do
         hpath_result = Hpath.get({ foo: { bar: "foobar" } },  "/foo/::parent")

@@ -1,8 +1,8 @@
 require "hpath"
-begin
-  require "pry"
-rescue LoadError
-end
+# begin
+#   require "pry"
+# rescue LoadError
+# end
 
 RSpec.configure do |config|
 end
